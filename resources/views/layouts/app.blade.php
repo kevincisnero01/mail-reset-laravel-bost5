@@ -12,7 +12,10 @@
         <script src="{{ asset('js/app.js')}}" defer></script>
     </head>
     <body>
-        <div class="container">
+
+        @include('layouts.navbar')
+
+        <div class="container" >
             @yield('content')
         </div>
     </body>
