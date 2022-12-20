@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,7 @@ Route::post('/login', function (Request $request) {
 
 })->middleware('guest')->name('login.response');
 
+// === AUTH ===
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
 })->middleware('auth')->name('dashboard');
@@ -47,3 +49,5 @@ Route::post('/logout', function(Request $request){
     return redirect('/');
 
 })->middleware('auth')->name('logout');
+
+Route::resource('users', UserController::class)->names('users');

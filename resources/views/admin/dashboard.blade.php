@@ -15,7 +15,7 @@
     <p>
         ¿Quieres ver la lista de usuarios?.
     </p>
-    <a href="#" class="btn btn-primary">
+    <a href="{{ route('users.index') }}" class="btn btn-primary">
     Usuarios
     </a>
 </div>
