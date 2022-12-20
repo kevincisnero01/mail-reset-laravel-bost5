@@ -11,6 +11,7 @@
         loading="lazy"
         style="margin-top: -1px;"
         />
+        Laravel
     </a>
 
     <!-- Toggle button -->
