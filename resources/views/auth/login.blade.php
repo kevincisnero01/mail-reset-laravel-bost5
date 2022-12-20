@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="mb-3 text-center">
-                    <a href="#" class="fs-6">¿Olvido la Contraseña?</a>
+                    <a href="{{ route('password.request') }}" class="fs-6">¿Olvido la Contraseña?</a>
                 </div>
 
             </form>
