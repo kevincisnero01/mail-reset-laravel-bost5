@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
-            return 'https://mail-reset-laravel.test/reset-password?token='.$token;
+            return 'http://mail-reset-laravel.test/reset-password/'.$token;
         });
     }
 }
