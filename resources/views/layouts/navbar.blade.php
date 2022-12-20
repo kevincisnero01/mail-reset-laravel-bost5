@@ -29,7 +29,7 @@
     <!-- Left links -->
     <div class="collapse navbar-collapse" id="navbarButtonsExample">
 
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
             <a class="nav-link" href="/">Inicio</a>
         </li>
@@ -51,9 +51,10 @@
         </a>
         @endguest
         @auth
-        <a href="#" class="btn btn-secondary me-3">
-            Cerrar Sesión
-        </a>
+        <form action="logout" method="post" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-secondary me-3">Cerrar Sesión</button>
+        </form>
         @endauth
     </div>
 
