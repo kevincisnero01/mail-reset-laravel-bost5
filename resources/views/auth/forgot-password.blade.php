@@ -15,7 +15,7 @@
     <div class="col-lg-6">
     <div class="card mt-5">
         <div class="card-header">
-            <h1>Recuperar Contraseña 1/2</h1>
+            <h1>Recuperar Contraseña <span class="badge text-bg-primary">1/2</span> </h1>
         </div>
         <div class="card-body">
             <form action="{{ route('password.email') }}" method="post">

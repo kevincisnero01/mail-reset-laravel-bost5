@@ -1,104 +1,28 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// === GUEST ===
+Route::view('/','welcome');
 
-Route::get('/login', function () {
+Route::get('/login', [LoginController::class,'login_request'])->middleware('guest')->name('login.request');
 
-    return view('auth.login');
+Route::post('/login', [LoginController::class,'login_response'])->middleware('guest')->name('login.response');
 
-})->middleware('guest')->name('login.request');
+Route::get('/forgot-password', [NewPasswordController::class,'forgot_password'])->middleware('guest')->name('password.request');
 
-Route::post('/login', function (Request $request) {
+Route::post('/forgot-password', [NewPasswordController::class,'send_email_reset_password'])->middleware('guest')->name('password.email');
 
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|min:8'
-    ]);
+Route::get('/reset-password/{token}', [NewPasswordController::class,'edit_password'])->middleware('guest')->name('password.edit');
 
-    if(Auth::attempt($credentials)){
-        $request->session()->regenerate();
-
-        return redirect('dashboard')->with('status','Inicio de sessión con exito.');
-    }
-
-    return redirect()->route('login.request')->with('status','Las credenciales no concuerdan con nuestros registros.');
-
-})->middleware('guest')->name('login.response');
-
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->middleware('guest')->name('password.request');
-
-Route::post('/forgot-password', function (Request $request) {
-    $request->validate(['email' => 'required|email']);
-
-    $status = Password::sendResetLink(
-        $request->only('email')
-    );
-
-    return $status === Password::RESET_LINK_SENT
-                ? back()->with(['status' => __($status)])
-                : back()->withErrors(['email' => __($status)]);
-})->middleware('guest')->name('password.email');
-
-Route::get('/reset-password/{token}', function ($token) {
-    return view('auth.reset-password', ['token' => $token]);
-})->middleware('guest')->name('password.reset');
-
-
-Route::post('/reset-password', function (Request $request) {
-    $request->validate([
-        'token' => 'required',
-        'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
-    $status = Password::reset(
-        $request->only('email', 'password', 'password_confirmation', 'token'),
-        function ($user, $password) {
-            $user->forceFill([
-                'password' => Hash::make($password)
-            ])->setRememberToken(Str::random(60));
-
-            $user->save();
-
-            event(new PasswordReset($user));
-        }
-    );
-
-    return $status === Password::PASSWORD_RESET
-                ? redirect()->route('login.response')->with('status', __($status))
-                : back()->withErrors(['email' => [__($status)]]);
-})->middleware('guest')->name('password.update');
-
+Route::post('/reset-password', [NewPasswordController::class,'update_password'])->middleware('guest')->name('password.update');
 
 // === AUTH ===
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware('auth')->name('dashboard');
+Route::view('/dashboard','admin.dashboard')->middleware('auth')->name('dashboard');
 
-Route::post('/logout', function(Request $request){
+Route::post('/logout', [LoginController::class,'logout'])->middleware('auth')->name('logout');
 
-    Auth::logout();
-
-    $request->session()->invalidate();
-
-    $request->session()->regenerateToken();
-
-    return redirect('/');
-
-})->middleware('auth')->name('logout');
-
-Route::resource('users', UserController::class)->names('users');
+Route::resource('users', UserController::class)->middleware('auth')->names('users');
