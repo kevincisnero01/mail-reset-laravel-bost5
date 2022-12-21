@@ -22,8 +22,8 @@
                 @csrf
                 <input type="hidden" name="token" value="{{ $token }}">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Ingrese su email">
+                    <label for="email" class="form-label">Correo</label>
+                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email')}}" placeholder="Ingrese su email">
                     @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="mb-3">
